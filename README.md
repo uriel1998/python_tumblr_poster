@@ -1,6 +1,6 @@
 # Python Tumblr Text Poster
 
-A Python CLI tool for posting text content to Tumblr with inline images, hashtags, and links. This is a refactored version of the original Go implementation with enhanced features and better usability.
+A Python CLI tool for posting text content to Tumblr with inline images, hashtags, and links. This is a refactored version of the original [gotumblr implementation](https://github.com/admacro/gotumblr) with enhanced features and better usability.  Yup, it was done by Claude, you can tell from the stupid icons.  Thrown together to avoid the shortcomings of the Go implementation above.  Because it's AI generated, the code in this repository is public domain and retains no copyright. 
 
 ## Features
 
@@ -236,34 +236,4 @@ Add debug prints by modifying the script or use the dry-run option to see exactl
 ```bash
 ./run_tumblr.sh --dry-run --file your_post.md
 ```
-
-## Important Fixes
-
-### Hashtag Processing Fix
-This Python version fixes a critical bug where hashtags were being split into individual letters instead of proper tags. The issue was caused by passing hashtags as a comma-separated string instead of a Python list to the Tumblr API.
-
-**Fixed behavior:**
-- Input: `#technology #programming #python` 
-- Result: Tags are correctly created as "technology", "programming", "python"
-- Previously would have created: "t", "e", "c", "h", "n", "o", "l", "o", "g", "y", etc.
-
-## Comparison with Go Version
-
-| Feature | Go Version | Python Version |
-|---------|------------|----------------|
-| File Input | ✅ text.md | ✅ Any .md file |
-| CLI Arguments | ❌ | ✅ Full support |
-| Inline Images | ❌ | ✅ With alt text |
-| Multiple Links | ❌ | ✅ Auto-detected |
-| Hashtag Parsing | ⚠️ JSON format | ✅ Fixed & Enhanced |
-| Dry Run | ❌ | ✅ Preview mode |
-| Virtual Environment | ❌ | ✅ Isolated deps |
-| Error Handling | ✅ Basic | ✅ Comprehensive |
-
-## Contributing
-
-Feel free to submit issues and enhancement requests! The code is designed to be easily extensible for additional Tumblr post types and features.
-
-## License
-
-This project maintains the same license as the original Go implementation.
+ 
