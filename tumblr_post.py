@@ -249,6 +249,7 @@ Get your API credentials at: https://www.tumblr.com/oauth/apps
         alt_text: str = "",
         link: str = "",
         hashtags: List[str] = None,
+        from_file: bool = False,
     ) -> Dict:
         """
         Post text content to Tumblr.
@@ -268,9 +269,14 @@ Get your API credentials at: https://www.tumblr.com/oauth/apps
             hashtags = []
 
         # Create post content
-        body = self.create_post_content(
-            title, description, image_url, alt_text, link, hashtags
-        )
+        if from_file:
+            # When parsing from file, description already contains everything
+            body = description
+        else:
+            # When using CLI args, build content from individual pieces
+            body = self.create_post_content(
+                title, description, image_url, alt_text, link, hashtags
+            )
 
         # Prepare post data
         post_data = {"type": "text", "format": "markdown", "body": body}
@@ -378,6 +384,7 @@ Environment Variables Required:
                 alt_text = post_data["alt_text"]
                 link = post_data["links"][0]["url"] if post_data["links"] else ""
                 hashtags = post_data["hashtags"]
+                from_file = True
 
                 print(f"✅ Successfully parsed file: {args.file}")
             except Exception as e:
@@ -392,12 +399,16 @@ Environment Variables Required:
             link = args.link or ""
             hashtags = args.hashtags.split(",") if args.hashtags else []
             hashtags = [tag.strip().lstrip("#") for tag in hashtags if tag.strip()]
+            from_file = False
 
         if args.dry_run:
             print("\n🧪 --- DRY RUN - Content that would be posted ---")
-            content = poster.create_post_content(
-                title, description, image_url, alt_text, link, hashtags
-            )
+            if from_file:
+                content = description
+            else:
+                content = poster.create_post_content(
+                    title, description, image_url, alt_text, link, hashtags
+                )
             print(f"📌 Title: {title}")
             print(f"🏷️  Tags: {', '.join(hashtags)}")
             print(f"📏 Content length: {len(content)} characters")
@@ -413,6 +424,7 @@ Environment Variables Required:
             alt_text=alt_text,
             link=link,
             hashtags=hashtags,
+            from_file=from_file,
         )
 
         if "error" in response or "errors" in response:
