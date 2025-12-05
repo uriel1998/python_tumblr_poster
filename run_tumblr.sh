@@ -4,15 +4,28 @@
 # Get the directory where this script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
+# Check if we should suppress non-error output
+LOUD=${LOUD:-0}
+
+print_info() {
+    if [ "$LOUD" = "1" ]; then
+        echo "$1"
+    fi
+}
+
+print_error() {
+    echo "$1"
+}
+
 # Check if virtual environment exists
 if [ ! -d "$SCRIPT_DIR/venv" ]; then
-    echo "[ERROR] Virtual environment not found. Please run ./setup.sh first."
+    print_error "[ERROR] Virtual environment not found. Please run ./setup.sh first."
     exit 1
 fi
 
 # Check if virtual environment activation script exists
 if [ ! -f "$SCRIPT_DIR/venv/bin/activate" ]; then
-    echo "[ERROR] Virtual environment activation script not found. Please run ./setup.sh to recreate."
+    print_error "[ERROR] Virtual environment activation script not found. Please run ./setup.sh to recreate."
     exit 1
 fi
 
@@ -21,7 +34,7 @@ source "$SCRIPT_DIR/venv/bin/activate"
 
 # Check if activation was successful
 if [ $? -ne 0 ]; then
-    echo "[ERROR] Failed to activate virtual environment."
+    print_error "[ERROR] Failed to activate virtual environment."
     exit 1
 fi
 

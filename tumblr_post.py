@@ -25,6 +25,21 @@ import re
 import sys
 from typing import Dict, List, Optional, Tuple
 
+# Check if we should suppress non-error output
+LOUD = os.getenv("LOUD") == "1"
+
+
+def print_info(message: str):
+    """Print info message only if LOUD is enabled."""
+    if LOUD:
+        print(message)
+
+
+def print_error(message: str):
+    """Always print error messages."""
+    print(message)
+
+
 try:
     import pytumblr
 except ImportError:
@@ -40,7 +55,7 @@ try:
     env_file = os.path.join(os.path.dirname(__file__), ".env")
     if os.path.exists(env_file):
         load_dotenv(env_file)
-        print(f"[info] Loaded environment variables from {env_file}")
+        print_info(f"[info] Loaded environment variables from {env_file}")
 except ImportError:
     # dotenv is optional, continue without it
     pass
@@ -105,7 +120,7 @@ Get your API credentials at: https://www.tumblr.com/oauth/apps
                 raise ValueError(
                     "Failed to authenticate with Tumblr API. Please check your credentials."
                 )
-            print(f"[info] Authenticated as: {info['user']['name']}")
+            print_info(f"[info] Authenticated as: {info['user']['name']}")
 
         except Exception as e:
             raise ValueError(f"Failed to initialize Tumblr client: {str(e)}")
@@ -289,33 +304,33 @@ Get your API credentials at: https://www.tumblr.com/oauth/apps
         if hashtags:
             post_data["tags"] = hashtags
 
-        print(f"[info] Posting to blog: {self.blog_name}")
-        print(f"[info] Title: {title}")
-        print(f"[info] Tags: {', '.join(hashtags) if hashtags else 'None'}")
-        print(f"[info] Content length: {len(body)} characters")
+        print_info(f"[info] Posting to blog: {self.blog_name}")
+        print_info(f"[info] Title: {title}")
+        print_info(f"[info] Tags: {', '.join(hashtags) if hashtags else 'None'}")
+        print_info(f"[info] Content length: {len(body)} characters")
 
         try:
             response = self.client.create_text(self.blog_name, **post_data)
 
             if "id" in response:
-                print(f"[info] Post created with ID: {response['id']}")
+                print_info(f"[info] Post created with ID: {response['id']}")
                 if "post_url" in response:
-                    print(f"[info] Post URL: {response['post_url']}")
+                    print_info(f"[info] Post URL: {response['post_url']}")
                 return response
             elif "errors" in response:
                 error_msgs = []
                 for error in response["errors"]:
                     error_msgs.append(f"  {error.get('detail', error)}")
-                print(f"[ERROR] Failed to create post:")
+                print_error(f"[ERROR] Failed to create post:")
                 for msg in error_msgs:
-                    print(msg)
+                    print_error(msg)
                 return response
             else:
-                print(f"[ERROR] Unexpected response: {response}")
+                print_error(f"[ERROR] Unexpected response: {response}")
                 return response
 
         except Exception as e:
-            print(f"[ERROR] Exception occurred: {str(e)}")
+            print_error(f"[ERROR] Exception occurred: {str(e)}")
             return {"error": str(e)}
 
 
@@ -374,7 +389,7 @@ Environment Variables Required:
 
         if args.file:
             # Parse from markdown file
-            print(f"[info] Reading from file: {args.file}")
+            print_info(f"[info] Reading from file: {args.file}")
             try:
                 post_data = poster.parse_markdown_file(args.file)
 
@@ -386,9 +401,9 @@ Environment Variables Required:
                 hashtags = post_data["hashtags"]
                 from_file = True
 
-                print(f"[info] Successfully parsed file: {args.file}")
+                print_info(f"[info] Successfully parsed file: {args.file}")
             except Exception as e:
-                print(f"[ERROR] Error parsing file {args.file}: {str(e)}")
+                print_error(f"[ERROR] Error parsing file {args.file}: {str(e)}")
                 sys.exit(1)
         else:
             # Use command line arguments
@@ -402,18 +417,18 @@ Environment Variables Required:
             from_file = False
 
         if args.dry_run:
-            print("\n[info] --- DRY RUN - Content that would be posted ---")
+            print_info("\n[info] --- DRY RUN - Content that would be posted ---")
             if from_file:
                 content = description
             else:
                 content = poster.create_post_content(
                     title, description, image_url, alt_text, link, hashtags
                 )
-            print(f"[info] Title: {title}")
-            print(f"[info] Tags: {', '.join(hashtags)}")
-            print(f"[info] Content length: {len(content)} characters")
-            print(f"[info] Content:\n{content}")
-            print("[info] --- END DRY RUN ---")
+            print_info(f"[info] Title: {title}")
+            print_info(f"[info] Tags: {', '.join(hashtags)}")
+            print_info(f"[info] Content length: {len(content)} characters")
+            print_info(f"[info] Content:\n{content}")
+            print_info("[info] --- END DRY RUN ---")
             sys.exit(0)
 
         # Post to Tumblr
@@ -434,7 +449,7 @@ Environment Variables Required:
         sys.exit(0)
 
     except Exception as e:
-        print(f"Error: {str(e)}")
+        print_error(f"Error: {str(e)}")
         sys.exit(1)
 
 
