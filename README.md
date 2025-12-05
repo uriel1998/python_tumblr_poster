@@ -2,6 +2,8 @@
 
 A Python CLI tool for posting text content to Tumblr with inline images, hashtags, and links. This is a refactored version of the original [gotumblr implementation](https://github.com/admacro/gotumblr) with enhanced features and better usability.  Yup, it was done by Claude, you can tell from the stupid icons.  Thrown together to avoid the shortcomings of the Go implementation above.  Because it's AI generated, the code in this repository is public domain and retains no copyright. 
 
+For additional output, set `LOUD=1` in your environment.
+
 ## Features
 
 - 🖼️ **Inline Images**: Support for images with alt text for accessibility
@@ -236,4 +238,3 @@ Add debug prints by modifying the script or use the dry-run option to see exactl
 ```bash
 ./run_tumblr.sh --dry-run --file your_post.md
 ```
- 
