@@ -5,59 +5,59 @@
 
 set -e  # Exit on error
 
-echo "🔧 Setting up Tumblr Python posting tool with virtual environment..."
+echo "[info] Setting up Tumblr Python posting tool with virtual environment..."
 
 # Check if Python 3 is installed
 if ! command -v python3 &> /dev/null; then
-    echo "❌ Python 3 is not installed. Please install Python 3.6 or higher."
+    echo "[ERROR] Python 3 is not installed. Please install Python 3.6 or higher."
     exit 1
 fi
 
-echo "✅ Python 3 found: $(python3 --version)"
+echo "[info] Python 3 found: $(python3 --version)"
 
 # Create virtual environment if it doesn't exist
 if [ ! -d "venv" ]; then
-    echo "🏗️  Creating virtual environment..."
+    echo "[info] Creating virtual environment..."
     python3 -m venv venv
     if [ $? -ne 0 ]; then
-        echo "❌ Failed to create virtual environment."
+        echo "[ERROR] Failed to create virtual environment."
         exit 1
     fi
-    echo "✅ Virtual environment created"
+    echo "[info] Virtual environment created"
 else
-    echo "✅ Virtual environment already exists"
+    echo "[info] Virtual environment already exists"
 fi
 
 # Activate virtual environment
-echo "🔌 Activating virtual environment..."
+echo "[info] Activating virtual environment..."
 source venv/bin/activate
 if [ $? -ne 0 ]; then
-    echo "❌ Failed to activate virtual environment."
+    echo "[ERROR] Failed to activate virtual environment."
     exit 1
 fi
 
 # Upgrade pip in virtual environment
-echo "⬆️  Upgrading pip..."
+echo "[info] Upgrading pip..."
 pip install --upgrade pip
 if [ $? -ne 0 ]; then
-    echo "❌ Failed to upgrade pip."
+    echo "[ERROR] Failed to upgrade pip."
     exit 1
 fi
 
 # Install Python dependencies
-echo "📦 Installing Python dependencies..."
+echo "[info] Installing Python dependencies..."
 pip install -r requirements.txt
 if [ $? -ne 0 ]; then
-    echo "❌ Failed to install Python dependencies."
+    echo "[ERROR] Failed to install Python dependencies."
     exit 1
 fi
 
-echo "✅ Dependencies installed successfully!"
+echo "[info] Dependencies installed successfully!"
 
 echo ""
-echo "🎉 Setup complete!"
+echo "[info] Setup complete!"
 echo ""
-echo "📋 Next steps:"
+echo "[info] Next steps:"
 echo "1. Set up your Tumblr API credentials as environment variables:"
 echo "   export TUMBLR_CONSUMER_KEY='your_consumer_key'"
 echo "   export TUMBLR_CONSUMER_SECRET='your_consumer_secret'"
@@ -77,9 +77,9 @@ echo ""
 echo "5. Create your first post:"
 echo "   ./run_tumblr.sh --file text.md"
 echo ""
-echo "📖 For more help, run: ./run_tumblr.sh --help"
+echo "[info] For more help, run: ./run_tumblr.sh --help"
 echo ""
-echo "💡 The convenience script './run_tumblr.sh' automatically activates the virtual environment"
+echo "[info] The convenience script './run_tumblr.sh' automatically activates the virtual environment"
 echo "   and runs the Python script, so you don't have to remember to activate it each time."
 
 # Exit with success code

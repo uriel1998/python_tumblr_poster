@@ -6,13 +6,13 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 # Check if virtual environment exists
 if [ ! -d "$SCRIPT_DIR/venv" ]; then
-    echo "❌ Virtual environment not found. Please run ./setup.sh first."
+    echo "[ERROR] Virtual environment not found. Please run ./setup.sh first."
     exit 1
 fi
 
 # Check if virtual environment activation script exists
 if [ ! -f "$SCRIPT_DIR/venv/bin/activate" ]; then
-    echo "❌ Virtual environment activation script not found. Please run ./setup.sh to recreate."
+    echo "[ERROR] Virtual environment activation script not found. Please run ./setup.sh to recreate."
     exit 1
 fi
 
@@ -21,7 +21,7 @@ source "$SCRIPT_DIR/venv/bin/activate"
 
 # Check if activation was successful
 if [ $? -ne 0 ]; then
-    echo "❌ Failed to activate virtual environment."
+    echo "[ERROR] Failed to activate virtual environment."
     exit 1
 fi
 

@@ -29,7 +29,7 @@ try:
     import pytumblr
 except ImportError:
     print(
-        "ERROR: pytumblr is not installed. Please run 'pip install pytumblr' or use the setup script."
+        "[ERROR] pytumblr is not installed. Please run 'pip install pytumblr' or use the setup script."
     )
     sys.exit(1)
 
@@ -40,7 +40,7 @@ try:
     env_file = os.path.join(os.path.dirname(__file__), ".env")
     if os.path.exists(env_file):
         load_dotenv(env_file)
-        print(f"Loaded environment variables from {env_file}")
+        print(f"[info] Loaded environment variables from {env_file}")
 except ImportError:
     # dotenv is optional, continue without it
     pass
@@ -105,7 +105,7 @@ Get your API credentials at: https://www.tumblr.com/oauth/apps
                 raise ValueError(
                     "Failed to authenticate with Tumblr API. Please check your credentials."
                 )
-            print(f"✅ Authenticated as: {info['user']['name']}")
+            print(f"[info] Authenticated as: {info['user']['name']}")
 
         except Exception as e:
             raise ValueError(f"Failed to initialize Tumblr client: {str(e)}")
@@ -289,33 +289,33 @@ Get your API credentials at: https://www.tumblr.com/oauth/apps
         if hashtags:
             post_data["tags"] = hashtags
 
-        print(f"📝 Posting to blog: {self.blog_name}")
-        print(f"📌 Title: {title}")
-        print(f"🏷️  Tags: {', '.join(hashtags) if hashtags else 'None'}")
-        print(f"📏 Content length: {len(body)} characters")
+        print(f"[info] Posting to blog: {self.blog_name}")
+        print(f"[info] Title: {title}")
+        print(f"[info] Tags: {', '.join(hashtags) if hashtags else 'None'}")
+        print(f"[info] Content length: {len(body)} characters")
 
         try:
             response = self.client.create_text(self.blog_name, **post_data)
 
             if "id" in response:
-                print(f"✅ [SUCCESS] Post created with ID: {response['id']}")
+                print(f"[info] Post created with ID: {response['id']}")
                 if "post_url" in response:
-                    print(f"🔗 Post URL: {response['post_url']}")
+                    print(f"[info] Post URL: {response['post_url']}")
                 return response
             elif "errors" in response:
                 error_msgs = []
                 for error in response["errors"]:
-                    error_msgs.append(f"  • {error.get('detail', error)}")
-                print(f"❌ [ERROR] Failed to create post:")
+                    error_msgs.append(f"  {error.get('detail', error)}")
+                print(f"[ERROR] Failed to create post:")
                 for msg in error_msgs:
                     print(msg)
                 return response
             else:
-                print(f"❌ [ERROR] Unexpected response: {response}")
+                print(f"[ERROR] Unexpected response: {response}")
                 return response
 
         except Exception as e:
-            print(f"❌ [ERROR] Exception occurred: {str(e)}")
+            print(f"[ERROR] Exception occurred: {str(e)}")
             return {"error": str(e)}
 
 
@@ -374,7 +374,7 @@ Environment Variables Required:
 
         if args.file:
             # Parse from markdown file
-            print(f"📖 Reading from file: {args.file}")
+            print(f"[info] Reading from file: {args.file}")
             try:
                 post_data = poster.parse_markdown_file(args.file)
 
@@ -386,9 +386,9 @@ Environment Variables Required:
                 hashtags = post_data["hashtags"]
                 from_file = True
 
-                print(f"✅ Successfully parsed file: {args.file}")
+                print(f"[info] Successfully parsed file: {args.file}")
             except Exception as e:
-                print(f"❌ Error parsing file {args.file}: {str(e)}")
+                print(f"[ERROR] Error parsing file {args.file}: {str(e)}")
                 sys.exit(1)
         else:
             # Use command line arguments
@@ -402,18 +402,18 @@ Environment Variables Required:
             from_file = False
 
         if args.dry_run:
-            print("\n🧪 --- DRY RUN - Content that would be posted ---")
+            print("\n[info] --- DRY RUN - Content that would be posted ---")
             if from_file:
                 content = description
             else:
                 content = poster.create_post_content(
                     title, description, image_url, alt_text, link, hashtags
                 )
-            print(f"📌 Title: {title}")
-            print(f"🏷️  Tags: {', '.join(hashtags)}")
-            print(f"📏 Content length: {len(content)} characters")
-            print(f"📝 Content:\n{content}")
-            print("--- END DRY RUN ---")
+            print(f"[info] Title: {title}")
+            print(f"[info] Tags: {', '.join(hashtags)}")
+            print(f"[info] Content length: {len(content)} characters")
+            print(f"[info] Content:\n{content}")
+            print("[info] --- END DRY RUN ---")
             sys.exit(0)
 
         # Post to Tumblr
